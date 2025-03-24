@@ -47,26 +47,25 @@ Remixの代表的なコンポーネント、useLoaderDataについて中身を�
 
 ```Typescript {filename="loader._index.tsx"}
 import { useLoaderData } from "@remix-run/react"
+import hello from "../server/loader.server";
 
-export default function hello() {
-  const remixMeetup: string = loader();
+export default function Hello() {
+  const remixMeetup: string = useLoaderData();
   return (
-    <>
     <h1>{remixMeetup}</h1>
-      // hello world
-    </>
+    //hello world
   )
 }
 
-function loader(): string {
-  const text: string = useLoaderData();
-  return text;
+export function loader(): string {
+  const textFromServer: string = hello();
+  return textFromServer;
 }
 ```
 
 ```Typescript {filename="loader.server.ts"}
-const loader = (): string => "hello world"
-export default loader;
+const hello = (): string => "hello world"
+export default hello;
 ```
 
 ## useLoaderDataの実力とは
@@ -96,7 +95,7 @@ export declare function useLoaderData<T = AppData>(): SerializeFrom<T>;
 > サーバー側の型がクライアント側の型と異なる場合は特に役立つ。
 
 > [!HINT]HINT
-> Json変換によって、Data->文字列になる場合等
+> Json変換によって、Data -> 文字列になる場合等
 
 ### Client or server
 
@@ -121,6 +120,8 @@ export declare function useLoaderData<T = AppData>(): SerializeFrom<T>;
 >    JavaScriptオブジェクトをそのまま転送することは不可)として転送される
 > 2. JavaScriptオブジェクトが文字列化されたJSONに変換され、
 >    Client側で再度パース(デシリアライズ)する。
+
+## loaderの挙動について
 
 [routeModules](https://github.com/remix-run/remix/blob/0e9772c8b4456c239ea148c4003932ce63a7198e/packages/remix-react/routeModules.ts#L183)
 
